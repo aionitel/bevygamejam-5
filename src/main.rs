@@ -2,6 +2,11 @@ use bevy::prelude::*;
 use bevy::diagnostic::{DiagnosticsStore, FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use std::process;
 use std::fmt::Write;
+use crate::player::PlayerPlugin;
+use crate::animation::AnimationPlugin;
+
+mod player;
+mod animation;
 
 fn main() {
     let mut app = App::new();
@@ -17,6 +22,8 @@ fn main() {
     );
     app.add_plugins(LogDiagnosticsPlugin::default());
     app.add_plugins(FrameTimeDiagnosticsPlugin::default());
+    app.add_plugins(PlayerPlugin);
+    app.add_plugins(AnimationPlugin);
     app.add_systems(Startup, setup);
     app.add_systems(Startup, spawn_fps_text);
     app.add_systems(Update, update_fps_text);
