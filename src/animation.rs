@@ -9,7 +9,8 @@ impl Plugin for AnimationPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<PlayerAnimations>()
             .add_systems(Update, update_player_animation)
-            .add_systems(Update, animate_player);
+            .add_systems(Update, animate_player)
+            .add_systems(Update, flip_player);
     }
 }
 
@@ -37,8 +38,8 @@ struct PlayerAnimations {
 
 impl FromWorld for PlayerAnimations {
     fn from_world(_world: &mut World) -> Self {
-        const IDLE_FRAME_TIME: f32 = 0.13;
-        const WALK_FRAME_TIME: f32 = 0.08;
+        const IDLE_FRAME_TIME: f32 = 0.1;
+        const WALK_FRAME_TIME: f32 = 0.05;
 
         let mut animations = PlayerAnimations {
             map: HashMap::new(),
@@ -110,5 +111,26 @@ fn animate_player(
 
         // Subtract total frames from frame_time as to not accumulate in frame_time.
         frame_time.0 -= animation.frame_time * frames_elapsed as f32;
+    }
+}
+
+fn flip_player(
+    mut sprite_q: Query<&mut Sprite, With<Player>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+) {
+    let mut sprite = sprite_q.single_mut();
+
+    // flip sprite on x axis when going from left to right, or vice-verse
+    if keyboard_input.any_just_pressed([KeyCode::KeyA, KeyCode::ArrowLeft]) {
+        sprite.flip_x = true;
+    } else if keyboard_input.any_just_pressed([KeyCode::KeyD, KeyCode::ArrowRight])
+        && !keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::ArrowLeft])
+    {
+        sprite.flip_x = false;
+    } else if keyboard_input.any_just_released([KeyCode::KeyA, KeyCode::ArrowLeft])
+        && !keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::ArrowLeft])
+        && keyboard_input.any_pressed([KeyCode::KeyD, KeyCode::ArrowRight])
+    {
+        sprite.flip_x = false;
     }
 }

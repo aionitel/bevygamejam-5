@@ -6,7 +6,8 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_player);
+        app.add_systems(Startup, spawn_player)
+            .add_systems(Update, player_movement);
     }
 }
 
@@ -38,4 +39,27 @@ fn spawn_player(
         .insert(AnimationType::Idle)
         .insert(FrameTime(0.5))
         .insert(Player);
+}
+
+fn player_movement(
+    mut player_pos_q: Query<&mut Transform, With<Player>>,
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    time: Res<Time>,
+) {
+    const SPEED: f32 = 200.;
+    let mut player_pos = player_pos_q.single_mut();
+
+    let mut direction = Vec3::ZERO;
+    if keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::ArrowLeft]) {
+        info!("Moving left");
+        direction += Vec3::new(-1., 0., 0.);
+    }
+    if keyboard_input.any_pressed([KeyCode::KeyD, KeyCode::ArrowRight]) {
+        info!("Moving right");
+        direction += Vec3::new(1., 0., 0.);
+    }
+
+    // Setting translation property to our own updated direction vector.
+    // delta_seconds() returns time elapsed since last frame, used to make movement frame-rate independent.
+    player_pos.translation += direction * SPEED * time.delta_seconds();
 }
