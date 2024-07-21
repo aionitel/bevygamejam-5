@@ -22,7 +22,7 @@ fn spawn_player(
 
     // Cut out player sprites from sheet.
     let texture = asset_server.load("player.png");
-    let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 14, 4, None, None);
+    let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 14, 4,  None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
     commands.spawn(
@@ -33,7 +33,6 @@ fn spawn_player(
         })
         .insert(TextureAtlas {
             layout: texture_atlas_layout,
-            index: 0,
             ..default()
         })
         .insert(AnimationType::Idle)
