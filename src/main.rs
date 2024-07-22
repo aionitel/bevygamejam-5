@@ -5,8 +5,7 @@ use std::fmt::Write;
 use crate::player::PlayerPlugin;
 use crate::animation::AnimationPlugin;
 
-mod player;
-mod animation;
+mod player; mod animation;
 
 fn main() {
     let mut app = App::new();
@@ -26,17 +25,34 @@ fn main() {
     app.add_plugins(AnimationPlugin);
     app.add_systems(Startup, setup);
     app.add_systems(Startup, spawn_fps_text);
+    app.add_systems(Update, player_camera);
     app.add_systems(Update, update_fps_text);
     app.add_systems(Update, close_on_esc);
 
     app.run();
 }
 
+#[derive(Component)]
+struct Camera;
+
 fn setup(
     mut commands: Commands,
 ) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle::default()).insert(Camera);
 }
+
+// Camera follows player, always centered on screen.
+fn player_camera(
+    player_q: Query<&Transform, With<player::Player>>,
+    mut camera_q: Query<(&Camera, &mut Transform), Without<player::Player>>,
+) {
+    let player = player_q.single();
+    let (_, mut camera) = camera_q.single_mut();
+
+    // Set camera's coordinates to player's coordinates on each frame.
+    camera.translation = player.translation;
+}
+
 
 #[derive(Component)]
 struct FrameRate;
