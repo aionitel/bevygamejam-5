@@ -4,8 +4,11 @@ use std::process;
 use std::fmt::Write;
 use crate::player::PlayerPlugin;
 use crate::animation::AnimationPlugin;
+use crate::planet::PlanetPlugin;
 
-mod player; mod animation;
+mod player;
+mod animation;
+mod planet;
 
 fn main() {
     let mut app = App::new();
@@ -23,6 +26,7 @@ fn main() {
     app.add_plugins(FrameTimeDiagnosticsPlugin::default());
     app.add_plugins(PlayerPlugin);
     app.add_plugins(AnimationPlugin);
+    app.add_plugins(PlanetPlugin);
     app.add_systems(Startup, setup);
     app.add_systems(Startup, spawn_fps_text);
     app.add_systems(Update, player_camera);

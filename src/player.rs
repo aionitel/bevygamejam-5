@@ -33,7 +33,11 @@ fn spawn_player(
     commands.spawn(
             SpriteBundle {
                 texture,
-                transform: Transform::from_scale(Vec3::splat(SCALE)),
+                transform: Transform {
+                    scale: Vec3::splat(SCALE),
+                    translation: Vec3::new(0., 0., 1.),
+                    ..default()
+                },
                 ..default()
         })
         .insert(TextureAtlas {
