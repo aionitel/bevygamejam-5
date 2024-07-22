@@ -22,6 +22,7 @@ pub struct FrameTime(pub f32);
 pub enum AnimationType {
     Idle,
     Walk,
+    Jump,
 }
 
 #[derive(Component, Clone, Debug, Default)]
@@ -40,6 +41,7 @@ impl FromWorld for PlayerAnimations {
     fn from_world(_world: &mut World) -> Self {
         const IDLE_FRAME_TIME: f32 = 0.1;
         const WALK_FRAME_TIME: f32 = 0.05;
+        const JUMP_FRAME_TIME: f32 = 0.05;
 
         let mut animations = PlayerAnimations {
             map: HashMap::new(),
@@ -61,6 +63,14 @@ impl FromWorld for PlayerAnimations {
                 frame_time: WALK_FRAME_TIME,
             }
         );
+        animations.map.insert(
+            AnimationType::Jump,
+            Animation {
+                index: 33,
+                len: 1,
+                frame_time: JUMP_FRAME_TIME,
+            }
+        );
 
         animations
     }
@@ -72,7 +82,9 @@ fn update_player_animation(
 ) {
     let mut animation = animation_q.single_mut();
 
-    let new_animation = if keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::KeyD, KeyCode::ArrowRight, KeyCode::ArrowLeft]) {
+    let new_animation = if keyboard_input.any_pressed([KeyCode::KeyW, KeyCode::ArrowUp, KeyCode::Space]) {
+        AnimationType::Jump
+    } else if keyboard_input.any_pressed([KeyCode::KeyA, KeyCode::KeyD, KeyCode::ArrowRight, KeyCode::ArrowLeft]) {
         AnimationType::Walk
     } else {
         AnimationType::Idle
@@ -90,21 +102,22 @@ fn animate_player(
 ) {
     let mut frame_time = frame_time_q.single_mut();
     let mut sprite = sprite_q.single_mut();
-    let Some(animation) = animation_res.map.get(animation_q.single()) else {
+    let animation_id = animation_q.single();
+    let Some(animation) = animation_res.map.get(animation_id) else {
         return;
     };
 
-    if sprite.index < animation.index { sprite.index = animation.index; }
-
     frame_time.0 += time.delta_seconds();
 
+    if sprite.index < animation.index { sprite.index = animation.index; } // If current sprite index is below animation starting index, set sprite index to beginning index of animation.
     if frame_time.0 >= animation.frame_time {
-        info!("{:?}", sprite.index);
 
         let frames_elapsed = frame_time.0 / animation.frame_time;
 
-        // Animate!
-        sprite.index += frames_elapsed as usize;
+        if animation_id != &AnimationType::Jump {
+            // Animate!
+            sprite.index += frames_elapsed as usize;
+        }
 
         // If current animation index becomes greater than or equal to size of animation, reset sprite index. (Restart animation)
         if sprite.index >= (animation.len + animation.index) { sprite.index = animation.index; }
@@ -114,13 +127,13 @@ fn animate_player(
     }
 }
 
+// Flip player along the x-axis when moving left and right.
 fn flip_player(
     mut sprite_q: Query<&mut Sprite, With<Player>>,
     keyboard_input: Res<ButtonInput<KeyCode>>,
 ) {
     let mut sprite = sprite_q.single_mut();
 
-    // flip sprite on x axis when going from left to right, or vice-verse
     if keyboard_input.any_just_pressed([KeyCode::KeyA, KeyCode::ArrowLeft]) {
         sprite.flip_x = true;
     } else if keyboard_input.any_just_pressed([KeyCode::KeyD, KeyCode::ArrowRight])
