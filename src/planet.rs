@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::*;
 
 #[derive(Component)]
 pub struct PlanetPlugin;
@@ -19,8 +20,11 @@ fn spawn_planet(
         texture,
         transform: Transform {
             scale: Vec3::splat(10.),
+            translation: Vec3::new(0., -1000., 0.),
             ..default()
         },
         ..default()
-    });
+    })
+    .insert(RigidBody::Fixed)
+    .insert(Collider::ball(1000.));
 }

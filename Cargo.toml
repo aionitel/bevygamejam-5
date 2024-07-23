@@ -5,3 +5,7 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.14.0"
+bevy_rapier2d = "*"
+
+[profile.dev.package."*"]
+opt-level = 3
