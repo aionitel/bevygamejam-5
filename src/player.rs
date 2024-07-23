@@ -20,32 +20,32 @@ fn spawn_player(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    const SCALE: f32 = 5.;
-
     // Cut out player sprites from sheet.
     let texture = asset_server.load("player.png");
     let layout = TextureAtlasLayout::from_grid(UVec2::splat(16), 14, 4,  None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
 
     commands.spawn(
-            SpriteBundle {
-                texture,
-                transform: Transform {
-                    scale: Vec3::splat(SCALE),
-                    translation: Vec3::new(0., 0., 1.),
-                    ..default()
-                },
+        SpriteBundle {
+            texture,
+            transform: Transform {
+                scale: Vec3::splat(5.),
+                translation: Vec3::new(0., 0., 1.),
                 ..default()
-        })
-        .insert(TextureAtlas {
-            layout: texture_atlas_layout,
+            },
             ..default()
-        })
-        .insert(AnimationType::Idle)
-        .insert(FrameTime(0.5))
-        .insert(Player)
-        .insert(RigidBody::Dynamic)
-        .insert(GravityScale(1.));
+    })
+    .insert(TextureAtlas {
+        layout: texture_atlas_layout,
+        ..default()
+    })
+    .insert(AnimationType::Idle)
+    .insert(FrameTime(0.5))
+    .insert(Player)
+    .insert(RigidBody::Dynamic)
+    .insert(Collider::cuboid(8., 8.))
+    .insert(AdditionalMassProperties::Mass(10.))
+    .insert(GravityScale(1.));
 }
 
 fn player_movement(
