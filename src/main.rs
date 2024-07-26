@@ -26,7 +26,7 @@ fn main() {
     );
     app.add_plugins(LogDiagnosticsPlugin::default());
     app.add_plugins(FrameTimeDiagnosticsPlugin::default());
-    app.add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0));
+    app.add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(8.));
     app.add_plugins(RapierDebugRenderPlugin::default());
     app.add_plugins(PlayerPlugin);
     app.add_plugins(AnimationPlugin);

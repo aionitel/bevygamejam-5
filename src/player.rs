@@ -8,8 +8,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_player)
-            .add_systems(Update, player_movement)
-            .add_systems(Update, player_jump);
+            .add_systems(Update, player_movement);
     }
 }
 
@@ -46,7 +45,8 @@ fn spawn_player(
     .insert(RigidBody::Dynamic)
     .insert(Collider::cuboid(8., 8.))
     .insert(GravityScale(9.))
-    .insert(Velocity::default())
+    .insert(AdditionalMassProperties::Mass(10.))
+    //.insert(Velocity::default())
     .insert(LockedAxes::ROTATION_LOCKED);
 }
 
@@ -69,17 +69,4 @@ fn player_movement(
     // Setting translation property to our own updated direction vector.
     // delta_seconds() returns time elapsed since last frame, used to make movement frame-rate independent.
     player_pos.translation += direction * SPEED * time.delta_seconds();
-}
-
-fn player_jump(
-    mut vel_q: Query<&mut Velocity, With<Player>>,
-    keyboard_input: Res<ButtonInput<KeyCode>>,
-) {
-    let mut vel = vel_q.single_mut();
-
-    if keyboard_input.any_pressed([KeyCode::KeyW, KeyCode::Space, KeyCode::ArrowUp]) {
-        vel.linvel.y = 200.;
-    } else {
-        vel.linvel.y = vel.linvel.y.min(0.0);
-    }
 }
