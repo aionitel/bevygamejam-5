@@ -57,8 +57,9 @@ fn player_camera(
     let player = player_q.single();
     let (_, mut camera) = camera_q.single_mut();
 
-    // Set camera's coordinates to player's coordinates on each frame.
+    // Set camera's coordinates to player's coordinates.
     camera.translation = player.translation;
+    camera.rotation = player.rotation;
 }
 
 
