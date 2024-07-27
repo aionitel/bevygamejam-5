@@ -26,5 +26,7 @@ fn spawn_planet(
         ..default()
     })
     .insert(RigidBody::Fixed)
-    .insert(Collider::ball(100.));
+    .insert(Collider::ball(100.))
+    .insert(AdditionalMassProperties::Mass(0.))
+    .insert(GravityScale(1.));
 }
