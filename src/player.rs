@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
 use crate::animation::{AnimationType, FrameTime};
 
 #[derive(Component)]
@@ -41,13 +40,7 @@ fn spawn_player(
     })
     .insert(Player)
     .insert(AnimationType::Idle)
-    .insert(FrameTime(0.5))
-    .insert(RigidBody::Dynamic)
-    .insert(Collider::cuboid(8., 8.))
-    .insert(GravityScale(9.))
-    .insert(AdditionalMassProperties::Mass(10.))
-    //.insert(Velocity::default())
-    .insert(LockedAxes::ROTATION_LOCKED);
+    .insert(FrameTime(0.5));
 }
 
 fn player_movement(

@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use bevy::diagnostic::{DiagnosticsStore, FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
-use bevy_rapier2d::prelude::*;
 use std::process;
 use std::fmt::Write;
 use crate::player::PlayerPlugin;
@@ -26,8 +25,6 @@ fn main() {
     );
     app.add_plugins(LogDiagnosticsPlugin::default());
     app.add_plugins(FrameTimeDiagnosticsPlugin::default());
-    app.add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(8.));
-    app.add_plugins(RapierDebugRenderPlugin::default());
     app.add_plugins(PlayerPlugin);
     app.add_plugins(AnimationPlugin);
     app.add_plugins(PlanetPlugin);

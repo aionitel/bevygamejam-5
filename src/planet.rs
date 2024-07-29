@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
 
 #[derive(Component)]
 pub struct PlanetPlugin;
@@ -24,9 +23,5 @@ fn spawn_planet(
             ..default()
         },
         ..default()
-    })
-    .insert(RigidBody::Fixed)
-    .insert(Collider::ball(100.))
-    .insert(AdditionalMassProperties::Mass(0.))
-    .insert(GravityScale(1.));
+    });
 }
