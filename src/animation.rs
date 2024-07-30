@@ -27,7 +27,7 @@ pub enum AnimationType {
 
 #[derive(Component, Clone, Debug, Default)]
 pub struct Animation {
-    pub index: usize,
+    pub index: usize, // Starting index of animation in spritesheet.
     pub len: usize,
     pub frame_time: f32,
 }
@@ -39,7 +39,7 @@ struct PlayerAnimations {
 
 impl FromWorld for PlayerAnimations {
     fn from_world(_world: &mut World) -> Self {
-        const IDLE_FRAME_TIME: f32 = 0.1;
+        const IDLE_FRAME_TIME: f32 = 0.15;
         const WALK_FRAME_TIME: f32 = 0.05;
         const JUMP_FRAME_TIME: f32 = 0.05;
 

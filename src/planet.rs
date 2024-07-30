@@ -42,6 +42,7 @@ fn spawn_planet(
         parent.spawn(MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Annulus::new(radius / 2. - 1., radius / 2. ))),
             material: materials.add(color),
+            transform: Transform::from_translation(Vec3::new(0., 0., 1.)),
             ..default()
         });
     });
