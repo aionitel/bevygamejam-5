@@ -9,7 +9,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_player)
             .add_systems(Update, player_movement)
-            .add_systems(Update, update_orbiting_planet);
+            .add_systems(Update, update_player_planet);
     }
 }
 
@@ -17,14 +17,16 @@ impl Plugin for PlayerPlugin {
 pub struct Player;
 
 #[derive(Component)]
-pub struct OrbitingPlanet(Planet);
+pub struct PlayerPlanet(Planet);
 
-fn update_orbiting_planet(
+fn update_player_planet(
     mut commands: Commands,
-    planets_q: Query<&Planet>,
+    player_q: Query<&Transform, With<Player>>,
+    planets_q: Query<&Transform, With<Planet>>,
 ) {
+    let player_pos = player_q.single();
+
     for planet in planets_q.iter() {
-        info!("{:?}", planet.position());
     }
 }
 
