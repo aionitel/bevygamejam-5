@@ -3,10 +3,17 @@ use bevy::{
     sprite::{MaterialMesh2dBundle, Mesh2dHandle},
 };
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct Planet {
     radius: f32,
     gravity: f32,
+    position: Vec3,
+}
+
+impl Planet {
+    pub fn position(&self) -> &Vec3 {
+        &self.position
+    }
 }
 
 #[derive(Component)]
@@ -25,6 +32,7 @@ fn spawn_planet(
     mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
     let radius: f32 = 200.;
+    let position = Vec3::new(0., -1100., 0.);
     let texture = asset_server.load("fire_planet.png");
     let color = Color::hsl(360., 0.95, 0.7);
 
@@ -32,12 +40,12 @@ fn spawn_planet(
         texture,
         transform: Transform {
             scale: Vec3::splat(10.),
-            translation: Vec3::new(0., -1100., 0.),
+            translation: position,
             ..default()
         },
         ..default()
     })
-    .insert(Planet { radius, gravity: 9.8 })
+    .insert(Planet { radius, gravity: 9.8, position })
     .with_children(|parent| {
         parent.spawn(MaterialMesh2dBundle {
             mesh: Mesh2dHandle(meshes.add(Annulus::new(radius / 2. - 1., radius / 2. ))),

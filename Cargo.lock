@@ -1113,13 +1113,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevygamejam-5"
-version = "0.1.0"
-dependencies = [
- "bevy",
-]
-
-[[package]]
 name = "bindgen"
 version = "0.69.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3348,6 +3341,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06794f8f6c5c898b3275aebefa6b8a1cb24cd2c6c79397ab15774837a0bc5755"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "the_little_cosmonaut"
+version = "0.1.0"
+dependencies = [
+ "bevy",
 ]
 
 [[package]]

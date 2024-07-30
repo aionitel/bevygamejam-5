@@ -8,7 +8,8 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_player)
-            .add_systems(Update, player_movement);
+            .add_systems(Update, player_movement)
+            .add_systems(Update, update_orbiting_planet);
     }
 }
 
@@ -17,6 +18,15 @@ pub struct Player;
 
 #[derive(Component)]
 pub struct OrbitingPlanet(Planet);
+
+fn update_orbiting_planet(
+    mut commands: Commands,
+    planets_q: Query<&Planet>,
+) {
+    for planet in planets_q.iter() {
+        info!("{:?}", planet.position());
+    }
+}
 
 fn spawn_player(
     mut commands: Commands,
