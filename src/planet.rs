@@ -4,13 +4,13 @@ use bevy::{
 };
 
 #[derive(Component)]
-pub struct PlanetPlugin;
-
-#[derive(Component)]
 pub struct Planet {
     radius: f32,
     gravity: f32,
 }
+
+#[derive(Component)]
+pub struct PlanetPlugin;
 
 impl Plugin for PlanetPlugin {
     fn build(&self, app: &mut App) {

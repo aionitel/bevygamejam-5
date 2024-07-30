@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use crate::animation::{AnimationType, FrameTime};
+use crate::planet::Planet;
 
 #[derive(Component)]
 pub struct PlayerPlugin;
@@ -13,6 +14,9 @@ impl Plugin for PlayerPlugin {
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct OrbitingPlanet(Planet);
 
 fn spawn_player(
     mut commands: Commands,
@@ -29,7 +33,7 @@ fn spawn_player(
             texture,
             transform: Transform {
                 scale: Vec3::splat(5.),
-                translation: Vec3::new(0., 0., 1.),
+                translation: Vec3::new(0., -70., 1.),
                 ..default()
             },
             ..default()
