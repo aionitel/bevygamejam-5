@@ -1,7 +1,16 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    sprite::{MaterialMesh2dBundle, Mesh2dHandle},
+};
 
 #[derive(Component)]
 pub struct PlanetPlugin;
+
+#[derive(Component)]
+pub struct Planet {
+    radius: f32,
+    gravity: f32,
+}
 
 impl Plugin for PlanetPlugin {
     fn build(&self, app: &mut App) {
@@ -12,8 +21,12 @@ impl Plugin for PlanetPlugin {
 fn spawn_planet(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
 ) {
+    let radius: f32 = 200.;
     let texture = asset_server.load("fire_planet.png");
+    let color = Color::hsl(360., 0.95, 0.7);
 
     commands.spawn(SpriteBundle {
         texture,
@@ -23,5 +36,13 @@ fn spawn_planet(
             ..default()
         },
         ..default()
+    })
+    .insert(Planet { radius, gravity: 9.8 })
+    .with_children(|parent| {
+        parent.spawn(MaterialMesh2dBundle {
+            mesh: Mesh2dHandle(meshes.add(Annulus::new(radius / 2. - 1., radius / 2. ))),
+            material: materials.add(color),
+            ..default()
+        });
     });
 }
